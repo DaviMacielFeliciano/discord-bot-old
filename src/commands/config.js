@@ -5,10 +5,113 @@ const { formatDateBR } = require('../utils/dateUtils')
 const { sleep } = require('../utils/fileUtils')
 
 const fs = require('fs')
+const { connect } = require('http2')
 
 
 exports.run = async (client, message, args, command) => {
-
+  const config = client.configCache.get(message.guild.id);
+  let args1 = args[0]
+  if(!args1) return message.channel.send(`${config.prefix}config dashboardMessage/dashboardChannel/attendancePainelMessage/server`)
+  if(args1 === "dashboardMessage") {
+    const filter = m => m.author.id == m.author.id
+            const msgPainel = await message.channel.send({ embeds: [new MessageEmbed().setTitle(`Escreva o ID que deseja!`).setDescription(`\nVocê pode escolher o da mensagem do comando dashboard.\n\n**OBS:** Para cancelar essa modificação digite \`\`cancelar\`\`.`)] })
+            const messageCollector = msgPainel.channel.createMessageCollector({ filter, time: 1000 * 10, max: 1 })
+            messageCollector.on('collect', async (collectMessage) => {
+              const content = collectMessage.content;
+              switch (content.toLowerCase()) {
+                case 'cancelar':
+                  messageCollector.stop();
+                  msgPainel.delete()
+                  collectMessage.reply({ content: `> 📌 Você cancelou a alteração do canal do comando dashboard.` }).then( msg => {
+                    setTimeout(() => {
+                        msg.delete();
+                    }, 5000);
+                  })
+                    collectMessage.delete()
+                  break;
+                  default:
+                    messageCollector.stop();
+                    config.dashboardMessage = content;
+                    const configuration = await client.updateGuildValues(message.guild, config);
+                    client.configCache.set(message.guild.id, configuration);
+                    message.channel.send({ content: `✅ O ID da mensagem do comando dashboard foi alterado para: ${content}.` }).then( msg => {
+                      setTimeout(() => {
+                          msg.delete();
+                      }, 5000);
+                  })
+                    msgPainel.delete()
+                    collectMessage.delete()
+                    break;
+      }
+   })
+  }
+  if(args1 === "dashboardChannel") {
+    const filter = m => m.author.id == m.author.id
+            const msgPainel = await message.channel.send({ embeds: [new MessageEmbed().setTitle(`Escreva o ID que deseja!`).setDescription(`\nVocê pode escolher o canal do comando dashboard.\n\n**OBS:** Para cancelar essa modificação digite \`\`cancelar\`\`.`)] })
+            const messageCollector = msgPainel.channel.createMessageCollector({ filter, time: 1000 * 10, max: 1 })
+            messageCollector.on('collect', async (collectMessage) => {
+              const content = collectMessage.content;
+              switch (content.toLowerCase()) {
+                case 'cancelar':
+                  messageCollector.stop();
+                  msgPainel.delete()
+                  collectMessage.reply({ content: `> 📌 Você cancelou a alteração do ID da mensagem do comando dashboard.` }).then( msg => {
+                    setTimeout(() => {
+                        msg.delete();
+                    }, 5000);
+                })
+                collectMessage.delete()
+                  break;
+                  default:
+                    messageCollector.stop();
+                    config.dashboardChannel = content;
+                    const configuration = await client.updateGuildValues(message.guild, config);
+                    client.configCache.set(message.guild.id, configuration);
+                    message.channel.send({ content: `> ✅ O ID da mensagem do comando dashboard foi alterado para: ${content}.` }).then( msg => {
+                      setTimeout(() => {
+                          msg.delete();
+                      }, 5000);
+                  })
+                  collectMessage.delete()
+                    msgPainel.delete()
+                    break;
+      }
+   })
+  }
+  if(args1 === "attendancePainelMessage") {
+    const filter = m => m.author.id == m.author.id
+            const msgPainel = await message.channel.send({ embeds: [new MessageEmbed().setTitle(`Escreva o ID que deseja!`).setDescription(`\nVocê pode escolher o da mensagem do comando dashboard.\n\n**OBS:** Para cancelar essa modificação digite \`\`cancelar\`\`.`)] })
+            const messageCollector = msgPainel.channel.createMessageCollector({ filter, time: 1000 * 10, max: 1 })
+            messageCollector.on('collect', async (collectMessage) => {
+              const content = collectMessage.content;
+              switch (content.toLowerCase()) {
+                case 'cancelar':
+                  messageCollector.stop();
+                  msgPainel.delete()
+                  collectMessage.reply({ content: `> 📌 Você cancelou a alteração da mensagem do atendimento!` }).then( msg => {
+                    setTimeout(() => {
+                        msg.delete();
+                    }, 5000);
+                  })
+                    collectMessage.delete()
+                  break;
+                  default:
+                    messageCollector.stop();
+                    config.attendancePainelMessage = content;
+                    const configuration = await client.updateGuildValues(message.guild, config);
+                    client.configCache.set(message.guild.id, configuration);
+                    message.channel.send({ content: `> ✅ O ID da mensagem do atendimento foi alterado para: ${content}.` }).then( msg => {
+                      setTimeout(() => {
+                          msg.delete();
+                      }, 5000);
+                  })
+                    msgPainel.delete()
+                    collectMessage.delete()
+                    break;
+      }
+   })
+  }
+  if(args1 === "server"){
   if (!message.member.permissions.has("KICK_MEMBERS")) return message.channel.send(`Você não tem permissão para usar este comando`);
   const guild = await client.getGuild(message.guild);
   const mappedGuild = Object.values(guild).filter(result => result != null);
@@ -103,9 +206,8 @@ exports.run = async (client, message, args, command) => {
         collectMessage.reply({ content: '🚫 Não existe nenhum arquivo nessa mensagem enviada.' })
       } catch (ignore) { }
     }
-
   });
-
+  }
 }
 exports.help = {
   name: 'config',

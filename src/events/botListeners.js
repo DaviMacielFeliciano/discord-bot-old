@@ -2,13 +2,17 @@ const { ListenerAdapter, ListenerEnums: { READY } } = require('../adapters/Liste
 
 const { formatTimeBR } = require('../utils/dateUtils');
 
-const getRandomRichPresence = (duration, size) => [`📃| Online a ${duration}.`, `🎮| ${size} membros.`][Math.floor(Math.random() * 2)]
+const getRandomRichPresence = (duration, size) => [`🎮| ${size} membros.`, `🤖 | discord.gg/redestone`][Math.floor(Math.random() * 2)]
 
-module.exports = (client) => class BotListeners extends ListenerAdapter {
+
+
+module.exports = (client) => class BotListeners extends ListenerAdapter{
   constructor() {
     super(client, [READY]);
   }
   async onBotReady() {
+    let channel = client.channels.cache.get("939060990937534484")
+    channel.send("&dashboard")
     console.log(`\n\x1b[32m✔\x1b[0m  \x1b[46m\x1b[30m discord.js \x1b[0m Bot logged successfully, with ${client.guilds.cache.size} servers e com ${client.users.cache.size} members.`);
 
     const updatedRichPresence = () => {

@@ -44,6 +44,15 @@ module.exports = (client) => class TicketStaffChatListeners extends ListenerAdap
       if (ticket.channel != null) {
         message.delete()
         if(message.content == `${config.prefix}fechar`) return;
+        let mencionar = [
+          `${message.author}`
+        ]
+        let random2 = mencionar[Math.floor(Math.random() * mencionar.length)]
+        await ticket.channel.send(random2).then(msg => {
+          setTimeout(() => {
+              msg.delete();
+          }, 1000);
+      })
         await ticket.channel.send({
           embeds: [new MessageEmbed()
             .setAuthor({name:`${message.author.username} enviou uma mensagem!`, iconURL: message.author.displayAvatarURL({ dynamic: true})})

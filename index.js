@@ -1,9 +1,11 @@
 'use-strict'
+const { channel } = require("diagnostics_channel");
 const Discord  = require("discord.js"); 
 
 
 
 const fs = require('fs');
+const { config } = require("process");
 const db = require('quick.db');
 const client = new Discord.Client({ intents: 32767 }); 
 client.config = require('./config.json');
@@ -48,6 +50,9 @@ fs.readdir('./src/commands/', (err, files) => {
     }
   });
 });
+
+
+
 client.login(client.config.token);
 
 

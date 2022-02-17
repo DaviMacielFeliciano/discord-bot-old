@@ -6,7 +6,6 @@ module.exports = (client) => class CommandListeners extends ListenerAdapter {
   }
 
   async onMessageListener(message) {
-    if (message.author.bot) return;
     if (message.channel.type === 'dm') return;
 
     let ID = "939017549822169119"

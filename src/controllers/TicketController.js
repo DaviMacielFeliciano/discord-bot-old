@@ -9,7 +9,6 @@ module.exports = client => {
 
     client.deleteTicket = async (ticket, embed) => {
       try {
-        if (ticket.painelMsg !== null) ticket.painelMsg.delete();
         if (ticket.holderMessage !== null) ticket.holderMessage.delete();
         if (ticket.channel !== null) ticket.channel.delete();
         delete client.tickets[ticket.user.id];
@@ -28,11 +27,13 @@ module.exports = client => {
           if (!client.guilds.cache.get(config.mainServer)) return;
           if (!client.guilds.cache.get(config.mainServer).channels.cache.get(config.attendancePainelChannel)) return;
           await client.guilds.cache.get(config.mainServer).channels.cache.get(config.attendancePainelChannel).messages.fetch(config.attendancePainelMessage).then(message => {
-            message.edit(new MessageEmbed()
-              .setTitle(`Área de atendimento ao jogador.`)
-              .setDescription(`Clique no emoji abaixo para ser redirecionado a\n criação de seu ticket, o atendimento será realizado por meio de suas mensagens privadas. [Saiba mais!](https://support.discord.com/hc/pt-br/sections/201131318-Mensagem-Privada)\n\nAgora estamos com **${parseFloat((Object.values(client.tickets).length / config.ticketsCapacity) * 100).toFixed(2)}%** da central em uso.`)
-              .setImage('https://minecraftskinstealer.com/achievement/19/Converse+conosco%21/Clique+no+emoji+abaixo.')
-              .setColor(`#36393f`))
+            const embed = new MessageEmbed()
+            .setAuthor({name:`Área de atendimento ao jogador.`, iconURL: `https://images-ext-2.discordapp.net/external/712tpa-GYde52lmi4YCiJ7ILeUmHSjK1XgsnyNo2Fd0/%3Fsize%3D128/https/cdn.discordapp.com/emojis/635165156149690429.png`})
+            .setDescription("Clique no emoji abaixo para ser redirecionado a criação de seu ticket, o atendimento será realizado por meio de suas mensagens privadas. [Saiba mais!](https://support.discord.com/hc/pt-br/sections/201131318-Mensagem-Privada)")
+            .addField("Informações:", `<:polvora:943618313974611968> Agora estamos com **${parseFloat((Object.values(client.tickets).length / config.ticketsCapacity) * 100).toFixed(2)}%** da central em uso.\n<:ping:943618282248884244> Latência: ${ping_do_bot}ms.`)
+            .setImage('https://minecraftskinstealer.com/achievement/35/Converse+conosco%21/Clique+no+emoji+abaixo.')
+            .setColor(`#36393f`)
+            message.edit({embeds: [embed]})
           });
         })
 

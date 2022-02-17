@@ -9,6 +9,8 @@ moment.locale("pt-br");
 const db = require("quick.db")
 
 exports.run = async (client, message, args, command) => {
+    const config = client.configCache.get(message.guild.id);
+    if (!config.reviewsEnabled) return message.channel.send(`🚫 A criação de revisões foi desabilitada por um superior.`)
     let user = message.author
     let embedconfirmacao = new MessageEmbed()
 
@@ -34,8 +36,6 @@ exports.run = async (client, message, args, command) => {
     if(!nick || !status || !motivo) return message.channel.send({embeds: [embedconfirmacao]})
     if (!message.member.permissions.has("ADMINISTRATOR")) return message.channel.send(`É necessário ser admin para utilizar esse comando.`);
     if (!client.avaliableUsage(message.guild)) return message.channel.send(`🚫 O bot nesse servidor não foi completamente configurado.`)
-    const config = client.configCache.get(message.guild.id);
-    if (!config.reviewsEnabled) return message.channel.send(`🚫 A criação de revisões foi desabilitada por um superior.`)
 
     const appelChannel = await client.guilds.cache.get("939017549822169119").channels.cache.get("939068860244561921");
     if(status == "01"){

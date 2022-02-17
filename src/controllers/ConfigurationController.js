@@ -23,6 +23,7 @@ module.exports = client => {
     ticketsCategory: "939061369548992522",
     welcomeChannel: null,
     spammerRole: null,
+    punishEnabled: true,
     reportsEnabled: true,
     reviewsEnabled: true,
     reviewDescription: `Os formularios para a revisão são realizadas por um formulário que pode ser enviado utilizando o link abaixo. \n\n Link: https://bit.ly/RevisaoWars \n Clique [aqui](https://bit.ly/RevisaoWars) para ser redirecionado.`,

@@ -19,8 +19,20 @@ module.exports.run = async (client, message, args, command) => {
 
     const config = client.configCache.get(message.guild.id);
     let silent = false;
-
+  
+    if (!config.punishEnabled) {
+        try {
+        let embed6 = new MessageEmbed()
+        .setTitle('Punições desativadas!')
+        .setDescription(`${message.author} no momento não é possível aplicar a punição pois está  \`\`desativada\`\`, aguarde e tente novamente mais tarde!`).setColor('#36393f')
+        .setColor((255, 0, 0))
+        const msg = await message.channel.send({embeds: [embed6]})
+        try { setTimeout(function(){msg.delete()}, 6000) } catch (error) { }
+    } catch (error) { }
+    return;
+  }
     let member = message.mentions.members.first()
+
     let embedmember = new MessageEmbed()
     .setAuthor({name:"Algo deu errado!", iconURL: "https://images-ext-2.discordapp.net/external/8vXvakWk4ygthBm5zwifRSd7c_qMTcBxzRZIMuC7T-4/%3Fv%3D1/https/cdn.discordapp.com/emojis/639241131707858955.png"})
     .setDescription("\nVocê precisa mencionar o membro que deseja punir juntamente ao uso do comando! A seguir você poderá escolher um motivo entre os listados.")
